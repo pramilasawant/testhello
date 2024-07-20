@@ -71,10 +71,10 @@ pipeline {
                     steps {
                         script {
                             sh """
-                                helm upgrade --install java-app ./path-to-java-helm-chart \
+                                helm upgrade --install testhello ./path-to-java-helm-chart \
                                 --set image.repository=pramila188/testhello \
                                 --set image.tag=latest \
-                                --namespace test1
+                                --namespace test
                             """
                         }
                     }
