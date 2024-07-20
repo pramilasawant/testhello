@@ -93,6 +93,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Apply Kubernetes Configurations') {
+            steps {
+                script {
+                    sh 'kubectl apply -f k8s/java-deployment.yaml'
+                    sh 'kubectl apply -f k8s/python-deployment.yaml'
+                }
+            }
+        }
     }
 
     post {
