@@ -65,31 +65,29 @@ pipeline {
             }
         }
 
-     stage('Deploy to Kubernetes') {
-    parallel {
-        stage('Deploy Java Application') {
-            steps {
-                script {
-                    sh """
-                        helm upgrade --install java-app ./path-to-java-helm-chart \
-                        --set image.repository=pramila188/testhello \
-                        --set image.tag=latest \
-                        --namespace test1
-                        """
+        stage('Deploy to Kubernetes') {
+            parallel {
+                stage('Deploy Java Application') {
+                    steps {
+                        script {
+                            sh """
+                                helm upgrade --install java-app ./path-to-java-helm-chart \
+                                --set image.repository=pramila188/testhello \
+                                --set image.tag=latest \
+                                --namespace test1
+                            """
+                        }
+                    }
                 }
-            }
-        }
-              stage('Deploy Python Application') {
-                 steps {
-                   script {
-                       sh """
-                         helm upgrade --install python-app ./path-to-python-helm-chart \
-                         --set image.repository=pramila188/python-app \
-                         --set image.tag=latest \
-                         --namespace python
-                               """
-            
-                            }
+                stage('Deploy Python Application') {
+                    steps {
+                        script {
+                            sh """
+                                helm upgrade --install python-app ./path-to-python-helm-chart \
+                                --set image.repository=pramila188/python-app \
+                                --set image.tag=latest \
+                                --namespace python
+                            """
                         }
                     }
                 }
