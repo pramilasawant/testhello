@@ -65,40 +65,33 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            parallel {
-                stage('Deploy Java Application') {
-                    steps {
-                        script {
-                            sh """
-                            kubectl create namespace ${params.JAVA_NAMESPACE} || true
-                            helm upgrade --install java-app helm/java-chart --namespace ${params.JAVA_NAMESPACE} \
-                            --set image.repository=${params.DOCKERHUB_USERNAME}/${params.JAVA_IMAGE_NAME}
-                            """
-                        }
-                    }
-                }
-                stage('Deploy Python Application') {
-                    steps {
-                        script {
-                            dir('python-app') {
-                                sh """
-                                kubectl create namespace ${params.PYTHON_NAMESPACE} || true
-                                helm upgrade --install python-app helm/python-chart --namespace ${params.PYTHON_NAMESPACE} \
-                                --set image.repository=${params.DOCKERHUB_USERNAME}/${params.PYTHON_IMAGE_NAME}
-                                """
-                            }
-                        }
-                    }
+     stage('Deploy to Kubernetes') {
+    parallel {
+        stage('Deploy Java Application') {
+            steps {
+                script {
+                    sh """
+                        helm upgrade --install java-app ./path-to-java-helm-chart \
+                        --set image.repository=pramila188/testhello \
+                        --set image.tag=latest \
+                        --namespace test1
+                        """
                 }
             }
         }
-
-        stage('Apply Kubernetes Configurations') {
-            steps {
-                script {
-                    sh 'kubectl apply -f k8s/java-deployment.yaml'
-                    sh 'kubectl apply -f k8s/python-deployment.yaml'
+              stage('Deploy Python Application') {
+                 steps {
+                   script {
+                       sh """
+                         helm upgrade --install python-app ./path-to-python-helm-chart \
+                         --set image.repository=pramila188/python-app \
+                         --set image.tag=latest \
+                         --namespace python
+                               """
+            
+                            }
+                        }
+                    }
                 }
             }
         }
