@@ -71,7 +71,12 @@ pipeline {
                 stage('Deploy Java Application') {
                     steps {
                         script {
-                            sh "helm upgrade --install java-app helm/testhello --namespace test --kubeconfig \$KUBECONFIG"
+                            sh """
+                                helm upgrade --install ${params.JAVA_IMAGE_NAME} ./testhello/helm-chart \
+                                --set image.repository=${params.DOCKERHUB_USERNAME}/${params.JAVA_IMAGE_NAME} \
+                                --set image.tag=latest \
+                                --namespace ${params.JAVA_NAMESPACE}
+                            """
                         }
                     }
                 }
