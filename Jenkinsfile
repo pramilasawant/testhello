@@ -72,7 +72,7 @@ pipeline {
                         script {
                             sh """
                             kubectl create namespace ${params.JAVA_NAMESPACE} || true
-                            helm upgrade --install java-app helm/java-chart --namespace ${params.JAVA_NAMESPACE} \
+                            helm upgrade --install java-app helm/myspringbootchart --namespace ${params.JAVA_NAMESPACE} \
                             --set image.repository=${params.DOCKERHUB_USERNAME}/${params.JAVA_IMAGE_NAME}
                             """
                         }
@@ -84,7 +84,7 @@ pipeline {
                             dir('python-app') {
                                 sh """
                                 kubectl create namespace ${params.PYTHON_NAMESPACE} || true
-                                helm upgrade --install python-app helm/python-chart --namespace ${params.PYTHON_NAMESPACE} \
+                                helm upgrade --install python-app helm/python-app --namespace ${params.PYTHON_NAMESPACE} \
                                 --set image.repository=${params.DOCKERHUB_USERNAME}/${params.PYTHON_IMAGE_NAME}
                                 """
                             }
