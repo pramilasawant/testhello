@@ -71,18 +71,19 @@ pipeline {
                     steps {
                         script {
                             kubernetesDeploy(
-                        configs: 'deploymentservice.yaml',
-                        kubeconfigId: 'k8sconfigpwd')
+                                configs: 'deploymentservice.yaml',
+                                kubeconfigId: 'k8sconfigpwd'
+                            )
                         }
                     }
                 }
                 stage('Deploy Python Application') {
                     steps {
                         script {
-                             kubernetesDeploy(
-                        configs: 'deploymentservice.yaml',
-                        kubeconfigId: 'k8sconfigpwd')
-                            }
+                            kubernetesDeploy(
+                                configs: 'deploymentservice.yaml',
+                                kubeconfigId: 'k8sconfigpwd'
+                            )
                         }
                     }
                 }
