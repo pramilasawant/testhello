@@ -72,7 +72,7 @@ pipeline {
                         script {
                             kubernetesDeploy(
                         configs: 'deploymentservice.yaml',
-                        kubeconfigId: 'k8sconfigpwd'
+                        kubeconfigId: 'k8sconfigpwd')
                         }
                     }
                 }
@@ -81,7 +81,7 @@ pipeline {
                         script {
                              kubernetesDeploy(
                         configs: 'deploymentservice.yaml',
-                        kubeconfigId: 'k8sconfigpwd'
+                        kubeconfigId: 'k8sconfigpwd')
                             }
                         }
                     }
