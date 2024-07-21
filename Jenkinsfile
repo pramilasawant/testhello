@@ -83,7 +83,12 @@ pipeline {
                 stage('Deploy Python Application') {
                     steps {
                         script {
-                             sh "helm upgrade --install python-app helm/python-app --namespace python --kubeconfig \$KUBECONFIG"
+                              sh """
+                                helm upgrade --install ${params.PYTHON_IMAGE_NAME} ./python-app/helm-chart \
+                                --set image.repository=${params.DOCKERHUB_USERNAME}/${params.PYTHON_IMAGE_NAME} \
+                                --set image.tag=latest \
+                                --namespace ${params.PYTHON_NAMESPACE}
+                            """
                         }
                     }
                 }
