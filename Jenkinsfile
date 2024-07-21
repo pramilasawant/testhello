@@ -70,23 +70,18 @@ pipeline {
                 stage('Deploy Java Application') {
                     steps {
                         script {
-                            sh """
-                            
-                            helm upgrade --install java-app helm/myspringbootchart --namespace ${params.JAVA_NAMESPACE} \
-                            --set image.repository=${params.DOCKERHUB_USERNAME}/${params.JAVA_IMAGE_NAME}
-                            """
+                            kubernetesDeploy(
+                        configs: 'deploymentservice.yaml',
+                        kubeconfigId: 'k8sconfigpwd'
                         }
                     }
                 }
                 stage('Deploy Python Application') {
                     steps {
                         script {
-                            dir('python-app') {
-                                sh """
-                               
-                                helm upgrade --install python-app helm/python-app --namespace ${params.PYTHON_NAMESPACE} \
-                                --set image.repository=${params.DOCKERHUB_USERNAME}/${params.PYTHON_IMAGE_NAME}
-                                """
+                             kubernetesDeploy(
+                        configs: 'deploymentservice.yaml',
+                        kubeconfigId: 'k8sconfigpwd'
                             }
                         }
                     }
