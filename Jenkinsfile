@@ -76,7 +76,7 @@ pipeline {
                         echo "Deployment failed: ${e.getMessage()}"
                         error "Kubernetes deployment ended with HasError"
                     }
-                            )
+                            
                         }
                     }
                 }
