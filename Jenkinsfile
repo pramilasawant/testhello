@@ -70,9 +70,12 @@ pipeline {
                 stage('Deploy Java Application') {
                     steps {
                         script {
-                            kubernetesDeploy(
-                                configs: 'deploymentservice.yaml',
-                                kubeconfigId: 'k8sconfigpwd'
+                            try {
+                        sh 'kubectl apply -f /var/lib/jenkins/workspace/j-p-project/deploymentservice.yaml'
+                    } catch (Exception e) {
+                        echo "Deployment failed: ${e.getMessage()}"
+                        error "Kubernetes deployment ended with HasError"
+                    }
                             )
                         }
                     }
