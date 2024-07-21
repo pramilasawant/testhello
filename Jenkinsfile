@@ -5,6 +5,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhubpwd')
         SLACK_CREDENTIALS = credentials('slackpwd')
+        KUBECONFIG = credentials('kubeconfig') // Assuming you have added your kubeconfig as a Jenkins credential
     }
 
     parameters {
@@ -70,24 +71,14 @@ pipeline {
                 stage('Deploy Java Application') {
                     steps {
                         script {
-                            sh """
-                                helm upgrade --install ${params.JAVA_IMAGE_NAME} ./testhello/myspringbootchart\
-                                --set image.repository=${params.DOCKERHUB_USERNAME}/${params.JAVA_IMAGE_NAME} \
-                                --set image.tag=latest \
-                                --namespace ${params.JAVA_NAMESPACE}
-                            """
+                            sh "helm upgrade --install java-app helm/testhello --namespace test --kubeconfig \$KUBECONFIG"
                         }
                     }
                 }
                 stage('Deploy Python Application') {
                     steps {
                         script {
-                            sh """
-                                helm upgrade --install ${params.PYTHON_IMAGE_NAME} ./python-app/ my-python-app\
-                                --set image.repository=${params.DOCKERHUB_USERNAME}/${params.PYTHON_IMAGE_NAME} \
-                                --set image.tag=latest \
-                                --namespace ${params.PYTHON_NAMESPACE}
-                            """
+                             sh "helm upgrade --install python-app helm/python-app --namespace python --kubeconfig \$KUBECONFIG"
                         }
                     }
                 }
