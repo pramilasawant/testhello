@@ -71,10 +71,10 @@ pipeline {
                     steps {
                         script {
                             sh """
-                                helm upgrade --install testhello ./path-to-java-helm-chart \
-                                --set image.repository=pramila188/testhello \
+                                helm upgrade --install ${params.JAVA_IMAGE_NAME} ./testhello/myspringbootchart\
+                                --set image.repository=${params.DOCKERHUB_USERNAME}/${params.JAVA_IMAGE_NAME} \
                                 --set image.tag=latest \
-                                --namespace test
+                                --namespace ${params.JAVA_NAMESPACE}
                             """
                         }
                     }
@@ -83,10 +83,10 @@ pipeline {
                     steps {
                         script {
                             sh """
-                                helm upgrade --install python-app ./path-to-python-helm-chart \
-                                --set image.repository=pramila188/python-app \
+                                helm upgrade --install ${params.PYTHON_IMAGE_NAME} ./python-app/ my-python-app\
+                                --set image.repository=${params.DOCKERHUB_USERNAME}/${params.PYTHON_IMAGE_NAME} \
                                 --set image.tag=latest \
-                                --namespace python
+                                --namespace ${params.PYTHON_NAMESPACE}
                             """
                         }
                     }
