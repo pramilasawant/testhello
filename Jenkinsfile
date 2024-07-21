@@ -5,7 +5,6 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhubpwd')
         SLACK_CREDENTIALS = credentials('slackpwd')
-        KUBECONFIG = credentials('kubeconfig') // Assuming you have added your kubeconfig as a Jenkins credential
     }
 
     parameters {
@@ -72,10 +71,9 @@ pipeline {
                     steps {
                         script {
                             sh """
-                                helm upgrade --install ${params.JAVA_IMAGE_NAME} ./testhello/helm-chart \
-                                --set image.repository=${params.DOCKERHUB_USERNAME}/${params.JAVA_IMAGE_NAME} \
-                                --set image.tag=latest \
-                                --namespace ${params.JAVA_NAMESPACE}
+                            kubectl create namespace ${params.JAVA_NAMESPACE} || true
+                            helm upgrade --install java-app helm/java-chart --namespace ${params.JAVA_NAMESPACE} \
+                            --set image.repository=${params.DOCKERHUB_USERNAME}/${params.JAVA_IMAGE_NAME}
                             """
                         }
                     }
@@ -83,12 +81,13 @@ pipeline {
                 stage('Deploy Python Application') {
                     steps {
                         script {
-                              sh """
-                                helm upgrade --install ${params.PYTHON_IMAGE_NAME} ./python-app/helm-chart \
-                                --set image.repository=${params.DOCKERHUB_USERNAME}/${params.PYTHON_IMAGE_NAME} \
-                                --set image.tag=latest \
-                                --namespace ${params.PYTHON_NAMESPACE}
-                            """
+                            dir('python-app') {
+                                sh """
+                                kubectl create namespace ${params.PYTHON_NAMESPACE} || true
+                                helm upgrade --install python-app helm/python-chart --namespace ${params.PYTHON_NAMESPACE} \
+                                --set image.repository=${params.DOCKERHUB_USERNAME}/${params.PYTHON_IMAGE_NAME}
+                                """
+                            }
                         }
                     }
                 }
