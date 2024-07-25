@@ -107,7 +107,7 @@ pipeline {
                     channel: slackChannel,
                     color: slackColor,
                     message: slackMessage,
-                    tokenCredentialId: slackpwd
+                    tokenCredentialId: 'slackpwd'
                 )
             }
        }
