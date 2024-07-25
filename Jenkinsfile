@@ -95,11 +95,20 @@ pipeline {
     }
 
     post {
-        success {
-            slackSend(channel: '#daily-updates', color: 'good', message: "Build and Deployment of Java and Python applications succeeded.", tokenCredentialId: 'slackpwd')
-        }
-        failure {
-            slackSend(channel: '#daily-updates', color: 'danger', message: "Build and Deployment of Java and Python applications failed.", tokenCredentialId: 'slackpwd')
-        }
+       always {
+            script {
+                def slackBaseUrl = 'https://slack.com/api/'
+                def slackChannel = '#daily-updates'
+                def slackColor = currentBuild.currentResult == 'SUCCESS' ? 'good' : 'danger'
+                def slackMessage = "Build ${currentBuild.fullDisplayName} finished with status: ${currentBuild.currentResult}"
+                
+                slackSend (
+                    baseUrl: slackBaseUrl,
+                    channel: slackChannel,
+                    color: slackColor,
+                    message: slackMessage,
+                    tokenCredentialId: slackpwd
+                )
+            }
+       }
     }
-}
