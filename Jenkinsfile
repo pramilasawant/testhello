@@ -94,13 +94,15 @@ pipeline {
         }
     }
 
-    post {
-       always {
+   post {
+        always {
             script {
                 def slackBaseUrl = 'https://slack.com/api/'
                 def slackChannel = '#daily-updates'
                 def slackColor = currentBuild.currentResult == 'SUCCESS' ? 'good' : 'danger'
                 def slackMessage = "Build ${currentBuild.fullDisplayName} finished with status: ${currentBuild.currentResult}"
+
+                echo "Sending Slack notification to ${slackChannel} with message: ${slackMessage}"
                 
                 slackSend (
                     baseUrl: slackBaseUrl,
@@ -110,6 +112,6 @@ pipeline {
                     tokenCredentialId: 'slackpwd'
                 )
             }
-       }
+        }
     }
 }
