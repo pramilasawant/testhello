@@ -96,10 +96,10 @@ pipeline {
 
     post {
         success {
-            slackSend(channel: '#builds', color: 'good', message: "Build and Deployment of Java and Python applications succeeded.", tokenCredentialId: 'slackpwd')
+            slackSend(channel: '#daily-updates', color: 'good', message: "Build and Deployment of Java and Python applications succeeded.", tokenCredentialId: 'slackpwd')
         }
         failure {
-            slackSend(channel: '#builds', color: 'danger', message: "Build and Deployment of Java and Python applications failed.", tokenCredentialId: 'slackpwd')
+            slackSend(channel: '#daily-updates', color: 'danger', message: "Build and Deployment of Java and Python applications failed.", tokenCredentialId: 'slackpwd')
         }
     }
 }
