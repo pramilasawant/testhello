@@ -98,7 +98,7 @@ pipeline {
         always {
             script {
                 def slackBaseUrl = 'https://slack.com/api/'
-                def slackChannel = '#daily-updates'
+                def slackChannel = '#builds'
                 def slackColor = currentBuild.currentResult == 'SUCCESS' ? 'good' : 'danger'
                 def slackMessage = "Build ${currentBuild.fullDisplayName} finished with status: ${currentBuild.currentResult}"
 
