@@ -4,7 +4,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhubpwd')
-        SLACK_CREDENTIALS = credentials('slackpwd')
+        SLACK_CREDENTIALS = credentials('jen-slack-pwd')
     }
 
     parameters {
@@ -110,7 +110,7 @@ pipeline {
                          channel: '#builds',
                          color: 'good',
                          botUser: true,
-                         tokenCredentialId: 'slackpwd',
+                         tokenCredentialId: 'jen-slack-pwd',
                          notifyCommitters: false,
                          message: "Build j-p-project #${env.BUILD_NUMBER} finished with status: ${currentBuild.currentResult}"
                        )
