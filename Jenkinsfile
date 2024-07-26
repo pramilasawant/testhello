@@ -104,13 +104,16 @@ pipeline {
 
                 echo "Sending Slack notification to ${slackChannel} with message: ${slackMessage}"
                 
-                slackSend (
-                    baseUrl: slackBaseUrl,
-                    channel: slackChannel,
-                    color: slackColor,
-                    message: slackMessage,
-                    tokenCredentialId: 'slackpwd'
-                )
+               slackSend (
+                         baseUrl: 'https://yourteam.slack.com/api/',
+                         teamDomain: 'StarAppleInfotech',
+                         channel: '#builds',
+                         color: 'good',
+                         botUser: true,
+                         tokenCredentialId: 'slackpwd',
+                         notifyCommitters: false
+                       )
+
             }
         }
     }
