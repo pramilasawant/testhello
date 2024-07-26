@@ -111,7 +111,7 @@ pipeline {
                          color: 'good',
                          botUser: true,
                          tokenCredentialId: 'slackpwd',
-                         notifyCommitters: false
+                         notifyCommitters: false,
                          message: "Build j-p-project #${env.BUILD_NUMBER} finished with status: ${currentBuild.currentResult}"
                        )
 
