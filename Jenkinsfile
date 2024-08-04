@@ -1,2 +1,2 @@
-@Library('shared_liberary')_
+@Library('shared_library')_
 sharedPipeline()
