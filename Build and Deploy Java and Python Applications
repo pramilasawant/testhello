@@ -1,0 +1,70 @@
+name: Build and Deploy Java and Python Applications
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Java Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/java-app:latest -f java-app/Dockerfile java-app
+          docker push ${{ secrets.DOCKER_USERNAME }}/java-app:latest
+
+      - name: Build and push Python Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/python-app:latest -f python-app/Dockerfile python-app
+          docker push ${{ secrets.DOCKER_USERNAME }}/python-app:latest
+
+      - name: Install Helm
+        run: |
+          wget https://get.helm.sh/helm-v3.5.2-linux-amd64.tar.gz
+          tar -xvzf helm-v3.5.2-linux-amd64.tar.gz
+          sudo cp -f linux-amd64/helm /usr/bin
+          helm version
+
+      - name: Build and package Java Helm chart
+        run: |
+          cd java-app
+          yq e -i '.image.tag = "latest"' ./helmchart/values.yaml
+          helm template ./helmchart
+          helm lint ./helmchart
+          helm package ./helmchart --version "1.0.0"
+
+      - name: Build and package Python Helm chart
+        run: |
+          cd python-app
+          yq e -i '.image.tag = "latest"' ./helmchart/values.yaml
+          helm template ./helmchart
+          helm lint ./helmchart
+          helm package ./helmchart --version "1.0.0"
+
+      - name: Set up Kubernetes
+        uses: azure/setup-kubectl@v1
+        with:
+          version: 'v1.21.0'
+          azcliversion: 'latest'
+
+      - name: Deploy Java application to Kubernetes
+        run: |
+          helm upgrade --install java-app ./java-app/helmchart --namespace java --create-namespace
+
+      - name: Deploy Python application to Kubernetes
+        run: |
+          helm upgrade --install python-app ./python-app/helmchart --namespace python --create-namespace
