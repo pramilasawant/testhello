@@ -1,2 +1,2 @@
-@Library('shared_library')_
+@Library('Jenkins_pipeline_library')_
 sharedPipeline()
