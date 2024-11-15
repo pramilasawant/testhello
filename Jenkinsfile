@@ -1,2 +1,3 @@
-@Library('Jenkins_pipeline_library')_
+@Library('dependency_track
+)_
 sharedPipeline()
